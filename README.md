@@ -1,3 +1,46 @@
+# Bedtime Story Teller
+
+Original bedtime stories for ages 5 to 10, written by one agent and reviewed by
+another before they reach a child. Submission for the Hippocratic AI assignment;
+the original brief is preserved below.
+
+## Run it
+
+```bash
+pip install -r requirements.txt
+echo "OPENAI_API_KEY=sk-..." > .env      # gitignored, never committed
+python main.py                            # tell a story
+python test_pipeline.py                   # 9 tests, no API key needed
+```
+
+## How it works
+
+Plain Python picks the world the story is set in, and keeps a category from
+repeating across three nights running — unless the request names one, which
+always wins. The generator writes the story; the judge reviews it against a
+safety gate, nine checks, and six 1-to-5 scores. If the judge asks for changes,
+the story is revised once and re-judged. Only a safety failure throws a draft
+away.
+
+| File | Holds |
+|---|---|
+| `main.py` | Generation, revision, the loop, printed output |
+| `llm_judge.py` | The judge and its verdict |
+| `story_categories.py` | The 13 categories and how one gets picked |
+| `story_history.py` | The JSON log that drives category rotation |
+| `test_pipeline.py` | Tests that need no API key |
+| `1-story-generator-prompt.md`, `2-story-judge-prompt.md` | The two agent personas |
+| `bedtime-story.md` | The research the prompts are built from |
+
+Storyteller: `gpt-3.5-turbo`, unchanged per the brief. Judge: `gpt-4o-mini`, on
+the grounds that a critic wants better reading comprehension than the writer, and
+the point of the pattern is that the reviewer is not the author.
+
+**[ARCHITECTURE.md](ARCHITECTURE.md)** has the block diagram, the workflow, the
+agent design pattern and why it fits, and the measured results and known limits.
+
+---
+
 # Hippocratic AI Coding Assignment
 Welcome to the [Hippocratic AI](https://www.hippocraticai.com) coding assignment
 
